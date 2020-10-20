@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,22 +21,43 @@ import {
 import colors from './src/utils/colors';
 import Form from './src/components/Form';
 import Footer from './src/components/Footer';
+import ResultCalculation from './src/components/ResultCalculation';
+
 YellowBox.ignoreWarnings(['Picker has been extracted']);
 export default function App() {
   const [capital, setCapital] = useState(null);
-  const [interes, setInteres] = useState(null);
+  const [interest, setinterest] = useState(null);
   const [months, setMonths] = useState(null);
+  const [total, setTotal] = useState(null);
 
-  const calculate = () => {
-    if (!capital) {
-      console.log('Añade la cantidad que quieres solicitar');
-    } else if (!interes) {
-      console.log('Añade el interés del préstamo');
-    } else if (!months) {
-      console.log('Selecciona los meses a pagar');
+  const [errorMessage, setErrorMessage] = useState(null);
+  useEffect(() => {
+    if (capital && interest && months) {
+      calculate();
     } else {
-      console.log('ok');
+      reset();
     }
+  }, [capital, interest, months]);
+  const calculate = () => {
+    reset();
+    if (!capital) {
+      setErrorMessage('Añade la cantidad que quieres solicitar');
+    } else if (!interest) {
+      setErrorMessage('Añade el interés del préstamo');
+    } else if (!months) {
+      setErrorMessage('Selecciona los meses a pagar');
+    } else {
+      const i = interest / 100;
+      const fee = capital / ((1 - Math.pow(i + 1, -months)) / i);
+      setTotal({
+        monthlyFee: fee.toFixed(2).replace('.', ','),
+        totalPayable: (fee * months).toFixed(2).replace('.', ','),
+      });
+    }
+  };
+  const reset = () => {
+    setErrorMessage('');
+    setTotal(null);
   };
   return (
     <>
@@ -46,12 +67,15 @@ export default function App() {
         <Text style={styles.titleApp}> Cotizador de Préstamos</Text>
         <Form
           setCapital={setCapital}
-          setInteres={setInteres}
+          setinterest={setinterest}
           setMonths={setMonths}></Form>
       </SafeAreaView>
-      <View>
-        <Text>Resultado</Text>
-      </View>
+      <ResultCalculation
+        capital={capital}
+        interest={interest}
+        months={months}
+        total={total}
+        errorMessage={errorMessage}></ResultCalculation>
       <View style={styles.footerView}>
         <Footer calculate={calculate}></Footer>
       </View>

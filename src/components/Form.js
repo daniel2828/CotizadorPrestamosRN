@@ -7,7 +7,7 @@ import RNPickerSelect from 'react-native-picker-select';
  * @param {*} props
  */
 export default function Form(props) {
-  const {setCapital, setInteres, setMonths} = props;
+  const {setCapital, setinterest, setMonths} = props;
   return (
     <>
       <View style={styles.viewForm}>
@@ -18,10 +18,10 @@ export default function Form(props) {
             style={styles.input}
             onChange={(e) => setCapital(e.nativeEvent.text)}></TextInput>
           <TextInput
-            placeholder="Interes %"
+            placeholder="interest %"
             keyboardType="numeric"
             style={[styles.input, styles.inputPerc]}
-            onChange={(e) => setInteres(e.nativeEvent.text)}></TextInput>
+            onChange={(e) => setinterest(e.nativeEvent.text)}></TextInput>
         </View>
         <RNPickerSelect
           style={pickerSelectStyles}
