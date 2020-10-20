@@ -20,17 +20,23 @@ import {
 
 import colors from './src/utils/colors';
 import Form from './src/components/Form';
-
+import Footer from './src/components/Footer';
 YellowBox.ignoreWarnings(['Picker has been extracted']);
 export default function App() {
   const [capital, setCapital] = useState(null);
   const [interes, setInteres] = useState(null);
   const [months, setMonths] = useState(null);
 
-  const onSubmit = () => {
-    console.log('capital ->', capital);
-    console.log('interes ->', interes);
-    console.log('months ->', months);
+  const calculate = () => {
+    if (!capital) {
+      console.log('Añade la cantidad que quieres solicitar');
+    } else if (!interes) {
+      console.log('Añade el interés del préstamo');
+    } else if (!months) {
+      console.log('Selecciona los meses a pagar');
+    } else {
+      console.log('ok');
+    }
   };
   return (
     <>
@@ -46,9 +52,8 @@ export default function App() {
       <View>
         <Text>Resultado</Text>
       </View>
-      <View>
-        <Button title="Enviar" onPress={onSubmit} />
-        <Text>Footer</Text>
+      <View style={styles.footerView}>
+        <Footer calculate={calculate}></Footer>
       </View>
     </>
   );
@@ -74,5 +79,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     marginTop: 15,
+  },
+  footerView: {
+    flex: 1,
   },
 });
